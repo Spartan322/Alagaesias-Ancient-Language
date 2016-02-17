@@ -1,5 +1,7 @@
 package com.firegodjr.ancientlanguage.blocks;
 
+import com.firegodjr.ancientlanguage.Main;
+import com.firegodjr.ancientlanguage.entity.EntityLightExtProperty;
 import com.firegodjr.ancientlanguage.tileentity.TileEntityMoveableLight;
 
 import net.minecraft.block.Block;
@@ -9,6 +11,8 @@ import net.minecraft.block.state.BlockState;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.BlockPos;
@@ -25,6 +29,7 @@ public class BlockMoveableLight extends Block implements ITileEntityProvider {
 
 	protected BlockMoveableLight(String unlocalName, int lightLevel) {
 		super(Material.air);
+        setUnlocalizedName(Main.MODID+":"+unlocalName);
 		setDefaultState(blockState.getBaseState());
 		setTickRandomly(false);
 		setLightLevel(lightLevel);
@@ -107,6 +112,21 @@ public class BlockMoveableLight extends Block implements ITileEntityProvider {
 	}
 
 	public boolean shouldEmit(TileEntityMoveableLight entity) {
-		return true;
+		return canEmit(entity.getFollowEntity());
+	}
+	
+	public static boolean canEmit(Entity entity) {
+		boolean result = EntityLightExtProperty.hasLight(entity);
+		if(!result && entity instanceof EntityLivingBase) {
+			EntityLivingBase entLiv = (EntityLivingBase) entity;
+			ItemStack held = entLiv.getEquipmentInSlot(0);
+			if(held != null) {
+				NBTTagCompound tag = held.getTagCompound();
+				if(tag != null) {
+					result = tag.getBoolean(EntityLightExtProperty.IDENT+".light");
+				}
+			}
+		}
+		return result;
 	}
 }

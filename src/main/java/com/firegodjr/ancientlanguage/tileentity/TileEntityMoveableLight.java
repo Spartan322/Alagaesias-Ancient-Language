@@ -23,18 +23,20 @@ public class TileEntityMoveableLight extends TileEntity implements IUpdatePlayer
 
 	@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
-		return (oldState.getBlock() != newSate.getBlock());
+		return oldState.getBlock() != newSate.getBlock();
 	}
 
 	@Override
 	public void update() {
-		if (!follow.getPosition().equals(this.getPos())) {
+		if(follow == null) 
+			worldObj.setBlockToAir(this.getPos());
+		
+		if (!follow.getPosition().equals(this.getPos()))
 			follow = this.findNearest();
-		}
+		
 		Block block = worldObj.getBlockState(getPos()).getBlock();
-		if (this.follow == null || !(block instanceof BlockMoveableLight)
-				|| !((BlockMoveableLight) block).shouldEmit(this) || !this.shouldEmit()) {
-			worldObj.setBlockToAir(getPos());
+		if (!(block instanceof BlockMoveableLight) || !((BlockMoveableLight) block).shouldEmit(this) || !this.shouldEmit()) {
+			worldObj.setBlockToAir(this.getPos());
 		}
 	}
 
@@ -50,15 +52,14 @@ public class TileEntityMoveableLight extends TileEntity implements IUpdatePlayer
 		return this.follow;
 	}
 
-	@SuppressWarnings("unchecked")
 	private Entity findNearest() {
-		List<Entity> list = worldObj.getEntitiesWithinAABB(Entity.class,
+		List<?> list = worldObj.getEntitiesWithinAABB(Entity.class,
 				new AxisAlignedBB(this.getPos().add(0.5F, 0.5F, 0.5F), this.getPos().add(-0.5F, -0.5F, -0.5F)));
 		Entity entity1 = null;
 		double d0 = Double.MAX_VALUE;
 
-		for (Iterator<Entity> it = list.iterator(); it.hasNext();) {
-			Entity entity2 = it.next();
+		for (Iterator<?> it = list.iterator(); it.hasNext();) {
+			Entity entity2 = (Entity) it.next();
 
 			if (!entity2.getPosition().equals(this.getPos())) {
 				BlockPos pos = entity2.getPosition();
@@ -70,7 +71,6 @@ public class TileEntityMoveableLight extends TileEntity implements IUpdatePlayer
 				}
 			}
 		}
-
 		return entity1;
 	}
 }

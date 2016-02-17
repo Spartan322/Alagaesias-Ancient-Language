@@ -201,7 +201,7 @@ public class WordAction {
 			// TODO: Fatigue
 		}
 	}
-
+	
 	/**
 	 * @deprecated Does not work as expected
 	 */
