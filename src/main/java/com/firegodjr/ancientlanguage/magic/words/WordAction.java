@@ -225,5 +225,11 @@ public class WordAction {
 				}
 			}
 		}
+
+		@Override
+		public Entity onWardPlace(MagicData data, Map<String, String> modData,
+				Vec3 position, String scriptToInsert) {
+			return null;
+		}
 	}
 }
