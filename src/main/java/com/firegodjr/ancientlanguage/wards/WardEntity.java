@@ -87,8 +87,9 @@ public class WardEntity extends TileEntity implements IUpdatePlayerListBox, IEne
 		}
 	}
 
+	@SuppressWarnings("unused")
 	@Override
-	public float useMagic(float energyToPull) {
+	public boolean pullEnergy(float energyToPull) {
 		float result = this.energy;
 		if (energyToPull > this.energy) {
 			this.energy = 0;
@@ -96,7 +97,7 @@ public class WardEntity extends TileEntity implements IUpdatePlayerListBox, IEne
 			this.energy -= energyToPull;
 			result = energyToPull;
 		}
-		return result;
+		return false;
 	}
 
 }

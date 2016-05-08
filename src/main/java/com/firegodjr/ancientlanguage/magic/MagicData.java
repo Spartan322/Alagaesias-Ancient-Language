@@ -3,6 +3,7 @@ package com.firegodjr.ancientlanguage.magic;
 import net.minecraft.util.MathHelper;
 
 import com.firegodjr.ancientlanguage.api.magic.IEnergyProducer;
+import com.firegodjr.ancientlanguage.api.magic.IMagicUser;
 
 /**
  * Class for handling magic and energy related data
@@ -33,12 +34,28 @@ public class MagicData {
 		this.magicMultiplier += multipler;
 	}
 
-	public float performMagic(float reqEnergy) {
-		return this.producer.useMagic(MathHelper.clamp_float(reqEnergy * this.magicMultiplier, 0, 1));
+	public boolean performMagic(float reqEnergy) {
+		return this.producer.pullEnergy(MathHelper.clamp_float(reqEnergy * this.magicMultiplier, 0, 1));
 	}
 
-	public float performMagic(int reqEnergy) {
-		return this.producer.useMagic(Math.max(reqEnergy * this.magicMultiplier, 1));
+	public boolean performMagic(int reqEnergy) {
+		return this.producer.pullEnergy(Math.max(reqEnergy * this.magicMultiplier, 1));
+	}
+
+	public boolean isMagicUser() {
+		return this.producer instanceof IMagicUser;
+	}
+
+	public boolean isProducer(Class<?> clazz) {
+		return clazz.isInstance(this.producer);
+	}
+
+	public int getUserLevel() {
+		return ((IMagicUser) this.producer).getLevel();
+	}
+
+	public float getUserExperience() {
+		return ((IMagicUser) this.producer).getExperience();
 	}
 
 	public Object getActualUser() {

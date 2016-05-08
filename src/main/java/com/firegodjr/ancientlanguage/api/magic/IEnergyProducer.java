@@ -6,13 +6,13 @@ package com.firegodjr.ancientlanguage.api.magic;
 public interface IEnergyProducer {
 
 	/**
-	 * Handles magic use
+	 * Pulls magic energy from user
 	 *
 	 * @param energyToPull
-	 *            The percentage of energy to pull
+	 *            The percentage of energy to pull compared to what the producer has
 	 *
-	 * @return The percentage of asked energy retrieved from energy request
+	 * @return Whether IEnergyProducer was harmed
 	 */
-	public float useMagic(float energyToPull);
+	public boolean pullEnergy(float energyToPull);
 
 }
