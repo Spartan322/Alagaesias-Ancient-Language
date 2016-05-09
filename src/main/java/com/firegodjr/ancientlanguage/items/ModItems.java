@@ -1,7 +1,7 @@
 package com.firegodjr.ancientlanguage.items;
 
 import net.minecraft.item.Item;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModItems {
 

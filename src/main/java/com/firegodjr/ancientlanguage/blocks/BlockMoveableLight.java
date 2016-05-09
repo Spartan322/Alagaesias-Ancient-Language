@@ -1,22 +1,14 @@
 package com.firegodjr.ancientlanguage.blocks;
 
-import com.firegodjr.ancientlanguage.tileentity.TileEntityMoveableLight;
-
 import net.minecraft.block.Block;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.material.Material;
-import net.minecraft.block.state.BlockState;
-import net.minecraft.block.state.IBlockState;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumWorldBlockLayer;
 import net.minecraft.world.World;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+
+import com.firegodjr.ancientlanguage.tileentity.TileEntityMoveableLight;
 
 /**
  * A block to handle a moving light 
@@ -25,7 +17,7 @@ public class BlockMoveableLight extends Block implements ITileEntityProvider {
 
 	protected BlockMoveableLight(String unlocalName, int lightLevel) {
 		super(Material.air);
-		setDefaultState(blockState.getBaseState());
+		//setDefaultState(blockState.getBaseState());
 		setTickRandomly(false);
 		setLightLevel(lightLevel);
 		setBlockBounds(0.5F, 0.5F, 0.5F, 0.5F, 0.5F, 0.5F);
@@ -37,7 +29,7 @@ public class BlockMoveableLight extends Block implements ITileEntityProvider {
 	}
 
 	@Override
-	public AxisAlignedBB getCollisionBoundingBox(World worldIn, BlockPos pos, IBlockState state) {
+	public AxisAlignedBB getCollisionBoundingBoxFromPool(World worldIn, int x, int y, int z) {
 		return null;
 	}
 
@@ -46,65 +38,33 @@ public class BlockMoveableLight extends Block implements ITileEntityProvider {
 		return false;
 	}
 
-	@Override
 	public boolean isFullCube() {
 		return false;
 	}
 
 	@Override
-	public boolean canPlaceBlockAt(World worldIn, BlockPos pos) {
+	public boolean canPlaceBlockAt(World worldIn, int x, int y, int z) {
 		return true;
 	}
 
 	@Override
-	public IBlockState onBlockPlaced(World worldIn, BlockPos pos, EnumFacing facing, float hitX, float hitY, float hitZ,
-			int meta, EntityLivingBase placer) {
-		return getDefaultState();
+	public int onBlockPlaced(World worldIn, int x, int y, int z, int facing, float hitX, float hitY, float hitZ, int meta) {
+		return 0;
 	}
 
 	@Override
-	public void onBlockAdded(World worldIn, BlockPos pos, IBlockState state) {
-		return;
-	}
+	public void onBlockAdded(World worldIn, int x, int y, int z) {}
 
 	/**
 	 * Called when a neighboring block changes.
 	 */
 	@Override
-	public void onNeighborBlockChange(World worldIn, BlockPos pos, IBlockState state, Block neighborBlock) {
-		return;
-	}
+	public void onNeighborBlockChange(World worldIn, int x, int y, int z, Block neighborBlock) {}
 
 	@Override
-	public IBlockState getStateFromMeta(int meta) {
-		return getDefaultState();
-	}
+	public void onFallenUpon(World worldIn, int x, int y, int z, Entity entityIn, float fallDistance) {}
 
-	@Override
-	public int getMetaFromState(IBlockState state) {
-		return 0;
-	}
-
-	@Override
-	@SideOnly(Side.CLIENT)
-	public EnumWorldBlockLayer getBlockLayer() {
-		return EnumWorldBlockLayer.CUTOUT;
-	}
-
-	@Override
-	public void onFallenUpon(World worldIn, BlockPos pos, Entity entityIn, float fallDistance) {
-		return;
-	}
-
-	@Override
-	public void onLanded(World worldIn, Entity entityIn) {
-		return;
-	}
-
-	@Override
-	protected BlockState createBlockState() {
-		return new BlockState(this);
-	}
+	public void onLanded(World worldIn, Entity entityIn) {}
 
 	public boolean shouldEmit(TileEntityMoveableLight entity) {
 		return true;

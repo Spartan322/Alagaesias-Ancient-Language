@@ -5,11 +5,12 @@ import java.util.List;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
+import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.Vec3;
 
 import com.firegodjr.ancientlanguage.Main;
 import com.firegodjr.ancientlanguage.magic.ScriptInstance;
@@ -27,7 +28,7 @@ public class CommandCast extends CommandBase {
 	}
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return "cast";
 	}
 
@@ -37,19 +38,22 @@ public class CommandCast extends CommandBase {
 	}
 
 	@Override
-	public List<String> getAliases() {
+	public List<String> getCommandAliases() {
 		return Lists.newArrayList("c", "aal.cast", "aal.c");
 	}
 
 	@Override
-	public void execute(ICommandSender sender, String[] args) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		if (args.length == 0)
 			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GRAY.toString() + EnumChatFormatting.ITALIC + "You said nothing."));
 		else {
 			Main.getLogger().info("Starting new ScriptInstance object");
 			ScriptInstance instance = new ScriptInstance(sender, args);
 			Main.getLogger().info("Entering script execution");
-			instance.onExecute(sender.getEntityWorld(), sender.getPositionVector());
+			Entity e;
+			if(sender instanceof Entity) e = (Entity) sender;
+			else throw new CommandException("sender is not entity");
+			instance.onExecute(e.worldObj, Vec3.createVectorHelper(e.posX, e.posY, e.posZ));
 			if (sender instanceof EntityPlayer)	Main.getLogger().info("Telling Player Chant");
 			String message = instance.getPrintableChant();
 			if (message.isEmpty())
@@ -63,12 +67,12 @@ public class CommandCast extends CommandBase {
 	}
 
 	@Override
-	public boolean canCommandSenderUse(ICommandSender sender) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return true;
 	}
 
 	@Override
-	public List<?> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+	public List<?> addTabCompletionOptions(ICommandSender sender, String[] args) {
 		return getListOfStringsMatchingLastWord(args, this.getTabPossibilities());
 	}
 

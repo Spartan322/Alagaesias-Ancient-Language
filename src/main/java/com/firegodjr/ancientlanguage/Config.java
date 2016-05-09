@@ -5,9 +5,10 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 import com.google.common.collect.Lists;
+
+import cpw.mods.fml.common.event.FMLPreInitializationEvent;
 
 /**
  * Configuration handler for Ancient Language

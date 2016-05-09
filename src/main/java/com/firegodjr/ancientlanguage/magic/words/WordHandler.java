@@ -8,11 +8,6 @@ import com.firegodjr.ancientlanguage.api.script.IScriptObject;
 import com.firegodjr.ancientlanguage.magic.MagicData;
 import com.firegodjr.ancientlanguage.magic.ScriptRegistry;
 import com.firegodjr.ancientlanguage.utils.ScriptData;
-import com.firegodjr.ancientlanguage.wards.WardBlock;
-
-import net.minecraft.util.BlockPos;
-import net.minecraft.util.Vec3;
-import net.minecraft.world.World;
 
 public class WordHandler {
 
@@ -60,7 +55,7 @@ public class WordHandler {
 			}});
 	}
 
-	public static void placeWard(World world, Vec3 target, List<String> args, int charge) {
+	/*public static void placeWard(World world, Vec3 target, List<String> args, int charge) {
 		world.setBlockState(new BlockPos(target), new WardBlock(args, charge).getDefaultState());
-	}
+	}*/
 }

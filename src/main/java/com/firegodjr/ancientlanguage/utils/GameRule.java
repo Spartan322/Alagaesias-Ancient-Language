@@ -5,10 +5,9 @@ import java.util.List;
 
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.GameRules;
-import net.minecraft.world.GameRules.ValueType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.WorldEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
 
 /**
  * A self-contained class to allow Object-Oriented manipulation of game rules
@@ -24,14 +23,10 @@ public class GameRule {
 
 	private final String name;
 	private String value;
-	private ValueType type;
+	//private ValueType type;
 
 	public GameRule(String name) {
 		this(name, "");
-	}
-
-	public GameRule(String name, String defValue) {
-		this(name, defValue, ValueType.ANY_VALUE);
 	}
 
 	/**
@@ -45,10 +40,10 @@ public class GameRule {
 	 *            The default type of the game rule (if value's type does not
 	 *            exist)
 	 */
-	public GameRule(String name, String defValue, ValueType defType) {
+	public GameRule(String name, String defValue) {
 		this.name = name;
 		this.value = defValue;
-		this.type = defType;
+		//this.type = defType;
 		this.processValue();
 		this.processType();
 		gameRulesList.add(this);
@@ -61,10 +56,10 @@ public class GameRule {
 	private void processValue() {
 		if (this.value == null)
 			this.value = "";
-		if (this.type == null)
-			this.type = ValueType.ANY_VALUE;
+		//if (this.type == null)
+			//this.type = ValueType.ANY_VALUE;
 		if (rules != null && !this.doesRuleExist())
-			rules.addGameRule(this.name, this.value, this.type);
+			rules.addGameRule(this.name, this.value);//, this.type);
 		this.value = rules == null ? "" : rules
 				.getGameRuleStringValue(this.name);
 	}
@@ -73,13 +68,13 @@ public class GameRule {
 	 * Processes the type, performing corrections according to {@link #rules}
 	 */
 	private void processType() {
-		if (rules == null)
-			this.type = ValueType.ANY_VALUE;
-		else
-			for (ValueType t : ValueType.values()) {
-				if (rules.areSameType(this.name, t))
-					this.type = t;
-			}
+		//if (rules == null)
+			//this.type = ValueType.ANY_VALUE;
+		//else
+			//for (ValueType t : ValueType.values()) {
+				//if (rules.areSameType(this.name, t))
+					//this.type = t;
+			//}
 	}
 
 	/**
@@ -134,9 +129,9 @@ public class GameRule {
 	/**
 	 * Returns the {@link ValueType} of the game rule
 	 */
-	public ValueType getType() {
-		return this.type;
-	}
+	//public ValueType getType() {
+		//return this.type;
+	//}
 
 	/**
 	 * Determines whether a rule exists
@@ -157,18 +152,18 @@ public class GameRule {
 		if (rules == null)
 			return;
 		this.value = value;
-		rules.addGameRule(this.name, this.value, this.type);
+		rules.addGameRule(this.name, this.value);//, this.type);
 	}
 
 	/**
 	 * Sets the type for the game rule
 	 */
-	public void setType(ValueType type) {
-		if (rules == null)
-			return;
-		this.type = type;
-		rules.addGameRule(this.name, this.value, this.type);
-	}
+	//public void setType(ValueType type) {
+		//if (rules == null)
+			//return;
+		//this.type = type;
+		//rules.addGameRule(this.name, this.value, this.type);
+	//}
 
 	private static void setGameRules(GameRules r) {
 		if (rules != null)
@@ -178,8 +173,7 @@ public class GameRule {
 
 	@Override
 	public String toString() {
-		return "Name: " + this.name + ", Value: " + this.value + ", Type: "
-				+ this.type;
+		return "Name: " + this.name + ", Value: " + this.value;// + ", Type: " + this.type;
 	}
 
 	public static final class EventHandler {

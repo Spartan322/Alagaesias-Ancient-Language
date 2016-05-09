@@ -8,7 +8,6 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.command.WrongUsageException;
 import net.minecraft.entity.Entity;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.BlockPos;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 
@@ -26,7 +25,7 @@ public class CommandExp extends CommandBase {
 	}
 
 	@Override
-	public String getName() {
+	public String getCommandName() {
 		return "exp";
 	}
 
@@ -36,14 +35,14 @@ public class CommandExp extends CommandBase {
 	}
 
 	@Override
-	public List<String> getAliases() {
+	public List<String> getCommandAliases() {
 		return Lists.newArrayList("exp", "experience", "level", "aal.exp");
 	}
 
 	@Override
-	public void execute(ICommandSender sender, String[] args) throws CommandException {
+	public void processCommand(ICommandSender sender, String[] args) throws CommandException {
 		if(args.length == 0) {
-			processEntity(sender, ExtPropMagicExperience.getExtProp((Entity) (sender instanceof Entity ? sender : sender.getCommandSenderEntity())));
+			processEntity(sender, ExtPropMagicExperience.getExtProp((Entity) (sender instanceof Entity ? sender : null)));
 		} else {
 			ExtPropMagicExperience prop = ExtPropMagicExperience.getExtProp(getPlayer(sender, args[0])); ;
 			if(args.length > 1) {
@@ -52,12 +51,12 @@ public class CommandExp extends CommandBase {
 				}
 				if (args[2].endsWith("L") || args[2].endsWith("l")) {
 					args[2] = args[2].substring(0, args[2].length()-1);
-					if ("add".equals(args[1])) prop.setLevel(parseInt(args[2], 0) + prop.getLevel());
-					if ("set".equals(args[1])) prop.setLevel(parseInt(args[2], 0));
+					if ("add".equals(args[1])) prop.setLevel(parseIntWithMin(sender, args[2], 0) + prop.getLevel());
+					if ("set".equals(args[1])) prop.setLevel(parseIntWithMin(sender, args[2], 0));
 				}
 				else {
-					if ("add".equals(args[1])) prop.addExperience((float) (parseDouble(args[2]) * 0.01));
-					if ("set".equals(args[1])) prop.setExperience((float) (parseDouble(args[2], 0) * 0.01));
+					if ("add".equals(args[1])) prop.addExperience((float) (parseDouble(sender, args[2]) * 0.01));
+					if ("set".equals(args[1])) prop.setExperience((float) (parseDoubleWithMin(sender, args[2], 0) * 0.01));
 				}
 			}
 			processEntity(sender, prop);
@@ -75,12 +74,12 @@ public class CommandExp extends CommandBase {
 	}
 
 	@Override
-	public boolean canCommandSenderUse(ICommandSender sender) {
+	public boolean canCommandSenderUseCommand(ICommandSender sender) {
 		return true;
 	}
 
 	@Override
-	public List<?> addTabCompletionOptions(ICommandSender sender, String[] args, BlockPos pos) {
+	public List<?> addTabCompletionOptions(ICommandSender sender, String[] args) {
 		return args.length == 1 ? getListOfStringsMatchingLastWord(args, MinecraftServer.getServer().getAllUsernames()) : null;
 	}
 

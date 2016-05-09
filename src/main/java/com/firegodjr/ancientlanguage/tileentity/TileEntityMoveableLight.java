@@ -1,27 +1,20 @@
 package com.firegodjr.ancientlanguage.tileentity;
 
-import java.util.Iterator;
-import java.util.List;
-
-import com.firegodjr.ancientlanguage.blocks.BlockMoveableLight;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.entity.Entity;
 import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.AxisAlignedBB;
-import net.minecraft.util.BlockPos;
-import net.minecraft.world.World;
 
 public class TileEntityMoveableLight extends TileEntity implements IUpdatePlayerListBox {
 
-	private Entity follow;
+	//private Entity follow;
 
 	public TileEntityMoveableLight() {
 	}
 
 	@Override
+	public void update() {
+	}
+
+	/*@Override
 	public boolean shouldRefresh(World world, BlockPos pos, IBlockState oldState, IBlockState newSate) {
 		return (oldState.getBlock() != newSate.getBlock());
 	}
@@ -72,5 +65,5 @@ public class TileEntityMoveableLight extends TileEntity implements IUpdatePlayer
 		}
 
 		return entity1;
-	}
+	}*/
 }

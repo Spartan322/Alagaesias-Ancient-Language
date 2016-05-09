@@ -1,7 +1,7 @@
 package com.firegodjr.ancientlanguage.blocks;
 
 import net.minecraft.block.Block;
-import net.minecraftforge.fml.common.registry.GameRegistry;
+import cpw.mods.fml.common.registry.GameRegistry;
 
 public class ModBlocks {
 

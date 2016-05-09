@@ -24,7 +24,6 @@ import com.firegodjr.ancientlanguage.api.script.IWord;
 import com.firegodjr.ancientlanguage.utils.MagicUtils;
 import com.firegodjr.ancientlanguage.utils.ModHooks;
 import com.firegodjr.ancientlanguage.utils.ScriptData;
-import com.google.common.base.Predicate;
 import com.google.common.collect.Lists;
 
 /**
@@ -51,7 +50,7 @@ public final class ScriptInstance {
 	}
 
 	public ScriptInstance(ICommandSender sender, String[] args) {
-		this((Entity)(sender instanceof Entity ? sender : sender.getCommandSenderEntity()), Strings.join(args, " "));
+		this((Entity)(sender instanceof Entity ? sender : null), Strings.join(args, " "));
 	}
 
 	public ScriptInstance(Entity producer, String script) {
@@ -134,12 +133,14 @@ public final class ScriptInstance {
 		Main.getLogger().info("Executing Parsed Script");
 		List<String> heardWords = Lists.newArrayList();
 		@SuppressWarnings("unchecked")
-		List<Object> selected = world.getPlayers(EntityPlayer.class, new Predicate<EntityPlayer>() {
+		List<Object> selected = ((List<Object>)Lists.newArrayList(world.playerEntities));
+		selected.removeIf(new java.util.function.Predicate<Object>() {
 			@Override
-			public boolean apply(EntityPlayer input) {
-				return position.squareDistanceTo(input.getPositionVector()) <= 100 && originalScript.indexOf(input.getName()) != -1;
+			public boolean test(Object input) {
+				if(!(input instanceof EntityPlayer)) return true;
+				EntityPlayer player = (EntityPlayer) input;
+				return position.squareDistanceTo(player.getPosition(1f)) > 100 && originalScript.indexOf(player.getDisplayName()) != -1;
 			}});
-		if (selected == null) selected = Lists.newArrayList();
 		List<IWord> activeWords = Lists.newArrayList();
 		IScriptObject currentWord;
 		for (currentParsePos = 0; currentParsePos < words.size(); currentParsePos++) {

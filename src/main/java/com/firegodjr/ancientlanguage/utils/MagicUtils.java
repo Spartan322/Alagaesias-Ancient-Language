@@ -41,7 +41,7 @@ public class MagicUtils {
 			float energyResult = 1;
 			if(entity instanceof EntityLivingBase) {
 				EntityLivingBase base = (EntityLivingBase) entity;
-				base.addPotionEffect(new PotionEffect(Potion.hunger.getId(), (int) energyToPull*10, (int) energyToPull*10, false, false));
+				base.addPotionEffect(new PotionEffect(Potion.hunger.getId(), (int) energyToPull*10, (int) energyToPull*10, false));
 				energyResult = base.getRNG().nextFloat();
 			}
 			if(entity instanceof EntityPlayer) {

@@ -2,16 +2,16 @@ package com.firegodjr.ancientlanguage.entity.properties;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.world.GameRules.ValueType;
 import net.minecraftforge.event.entity.EntityEvent.EntityConstructing;
 import net.minecraftforge.event.entity.player.PlayerEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.firegodjr.ancientlanguage.utils.GameRule;
 
+import cpw.mods.fml.common.eventhandler.SubscribeEvent;
+
 public final class ExtendedPropertiesHandler {
 
-	public static final GameRule preserveDeadRule = new GameRule("aal.preserveDeadExperience", "true", ValueType.BOOLEAN_VALUE);
+	public static final GameRule preserveDeadRule = new GameRule("aal.preserveDeadExperience", "true");
 
 	@SubscribeEvent
 	public void onEntityConstruct(EntityConstructing evt) {

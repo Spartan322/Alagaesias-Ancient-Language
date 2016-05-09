@@ -3,11 +3,6 @@ package com.firegodjr.ancientlanguage.wards;
 import java.util.Collection;
 import java.util.List;
 
-import com.firegodjr.ancientlanguage.ParticleHandler;
-import com.firegodjr.ancientlanguage.api.magic.IEnergyProducer;
-import com.firegodjr.ancientlanguage.magic.ScriptInstance;
-import com.firegodjr.ancientlanguage.utils.NBTUtils;
-
 import joptsimple.internal.Strings;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.nbt.NBTTagCompound;
@@ -15,8 +10,12 @@ import net.minecraft.server.gui.IUpdatePlayerListBox;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.AxisAlignedBB;
 import net.minecraft.util.EnumFacing;
-import net.minecraft.util.EnumParticleTypes;
 import net.minecraft.util.Vec3;
+
+import com.firegodjr.ancientlanguage.ParticleHandler;
+import com.firegodjr.ancientlanguage.api.magic.IEnergyProducer;
+import com.firegodjr.ancientlanguage.magic.ScriptInstance;
+import com.firegodjr.ancientlanguage.utils.NBTUtils;
 
 public class WardEntity extends TileEntity implements IUpdatePlayerListBox, IEnergyProducer {
 
@@ -75,15 +74,15 @@ public class WardEntity extends TileEntity implements IUpdatePlayerListBox, IEne
 
 	@Override
 	public void update() {
-		worldObj.spawnParticle(EnumParticleTypes.ENCHANTMENT_TABLE, this.pos.getX() + Math.random(),
-				this.pos.getY() + Math.random(), this.pos.getZ() + Math.random(), 0, 0, 0, 0);
+		worldObj.spawnParticle("enchantment_table", this.xCoord + Math.random(),
+				this.yCoord + Math.random(), this.zCoord + Math.random(), 0, 0, 0);
 		
-		ParticleHandler.ghostLight(this.pos.getX(), this.pos.getY(), this.pos.getZ(), 5, this.worldObj);
+		ParticleHandler.ghostLight(this.xCoord, this.yCoord, this.zCoord, 5, this.worldObj);
 
-		AxisAlignedBB bb = new AxisAlignedBB(this.pos, this.pos);
+		AxisAlignedBB bb = AxisAlignedBB.getBoundingBox(this.xCoord, yCoord, zCoord, this.xCoord, yCoord, zCoord);
 		
 		if (!this.worldObj.getEntitiesWithinAABB(EntityLiving.class, bb).isEmpty()) {
-			this.script.onExecute(this.worldObj, new Vec3(this.pos.getX(), this.pos.getY(), this.pos.getZ()));
+			this.script.onExecute(this.worldObj, Vec3.createVectorHelper(this.xCoord, this.yCoord, this.zCoord));
 		}
 	}
 

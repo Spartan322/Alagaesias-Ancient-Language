@@ -1,7 +1,5 @@
 package com.firegodjr.ancientlanguage.items;
 
-import com.firegodjr.ancientlanguage.command.CommandCast;
-
 import net.minecraft.command.CommandException;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.entity.player.EntityPlayerMP;
@@ -11,14 +9,14 @@ import net.minecraft.item.ItemEditableBook;
 import net.minecraft.item.ItemStack;
 import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.nbt.NBTTagList;
-import net.minecraft.nbt.NBTTagString;
 import net.minecraft.network.play.server.S2FPacketSetSlot;
 import net.minecraft.stats.StatList;
-import net.minecraft.util.ChatComponentProcessor;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.IChatComponent;
 import net.minecraft.world.World;
+
+import com.firegodjr.ancientlanguage.command.CommandCast;
 
 public class Spellbook extends ItemEditableBook {
 	public Spellbook(String unlocalname) {
@@ -42,7 +40,7 @@ public class Spellbook extends ItemEditableBook {
 					String s = nbttaglist.getStringTagAt(1);
 					CommandCast cast = new CommandCast();
 					try {
-						cast.execute(player, s.split(" "));
+						cast.processCommand(player, s.split(" "));
 					} catch (CommandException e) {
 						player.addChatComponentMessage(
 								new ChatComponentText(EnumChatFormatting.RED + "Spell casting failed!"));
@@ -56,6 +54,7 @@ public class Spellbook extends ItemEditableBook {
 		return stack;
 	}
 
+	@SuppressWarnings("unused")
 	private void resolveContents(ItemStack stack, EntityPlayer player) {
 		if (stack != null && stack.getTagCompound() != null) {
 			NBTTagCompound nbttagcompound = stack.getTagCompound();
@@ -71,14 +70,13 @@ public class Spellbook extends ItemEditableBook {
 						Object object;
 
 						try {
-							IChatComponent ichatcomponent = IChatComponent.Serializer.jsonToComponent(s);
-							object = ChatComponentProcessor.func_179985_a(player, ichatcomponent, player);
+							IChatComponent ichatcomponent = IChatComponent.Serializer.func_150699_a(s);
+							//object = ChatComponentProcessor.func_179985_a(player, ichatcomponent, player);
 						} catch (Exception exception) {
 							object = new ChatComponentText(s);
 						}
 
-						nbttaglist.set(i,
-								new NBTTagString(IChatComponent.Serializer.componentToJson((IChatComponent) object)));
+						//nbttaglist.set(i, new NBTTagString(IChatComponent.Serializer.func_150696_a((IChatComponent) object)));
 					}
 
 					nbttagcompound.setTag("pages", nbttaglist);
