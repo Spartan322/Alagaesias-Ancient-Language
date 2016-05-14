@@ -10,7 +10,7 @@ import com.firegodjr.ancientlanguage.Main;
 public class EventTest {
 
 	private static boolean ENABLE = false;
-	
+
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		if(ENABLE) {
@@ -21,5 +21,4 @@ public class EventTest {
 			SpecificTypeActiveEventTest.init();
 		}
 	}
-	
 }

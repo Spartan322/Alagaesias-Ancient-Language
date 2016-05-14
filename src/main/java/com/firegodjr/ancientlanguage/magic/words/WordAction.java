@@ -7,11 +7,13 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.item.EntityFallingBlock;
 import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.projectile.EntitySmallFireball;
 import net.minecraft.init.Blocks;
 import net.minecraft.potion.Potion;
 import net.minecraft.util.ChatComponentText;
 import net.minecraft.util.DamageSource;
 import net.minecraft.util.EnumChatFormatting;
+import net.minecraft.util.MathHelper;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
 
@@ -106,17 +108,48 @@ public class WordAction {
 		@Override
 		public void onUse(MagicData energy, Map<String, String> modData, List<?> selectors) {
 			int fatigue = 0;
-			for (Object obj : selectors) {
-				if (obj instanceof EntityLivingBase) {
+			if((modData.get("ball") != null || modData.get("orb") != null) && energy.getActualUser() instanceof EntityLivingBase) {
+				EntityLivingBase e = (EntityLivingBase) energy.getActualUser();
+				EntitySmallFireball f;
+				double ax, ay, az;
+				Vec3 v;
+				BlockPosHit pos;
+				if(selectors.isEmpty()) {
+					v = VersionUtils.getEntityLook(e);
+					ax = v.xCoord*20;
+					ay = v.yCoord*20;
+					az = v.zCoord*20;
+					f = new EntitySmallFireball(e.worldObj, e, ax, ay, az);
+					f.worldObj.spawnEntityInWorld(f);
 					fatigue++;
-					// Sets selected entities on fire
-					((EntityLivingBase) obj).setFire(10);
-				} else if (obj instanceof BlockPosHit && energy.getActualUser() instanceof Entity) {
-					World world = ((Entity) energy.getActualUser()).worldObj;
-					BlockPosHit pos = (BlockPosHit) obj;
-					// Sets block on fire
-					if (VersionUtils.isAirBlock(world, pos))
-						VersionUtils.setBlock(world, pos, Blocks.fire);
+				} else for(Object o : selectors) {
+					if(o instanceof Entity) {
+						v = VersionUtils.getEntityPosition((Entity)o);
+					} else if(o instanceof BlockPosHit) {
+						pos = (BlockPosHit)o;
+						v = VersionUtils.createVec3(pos.getX(), pos.getY(), pos.getZ());
+					} else v = null;
+					if(v == null) continue;
+					ax = MathHelper.clamp_double(e.posX - v.xCoord, -20, 20);
+					ay = MathHelper.clamp_double(e.posY - v.yCoord, -20, 20);
+					az = MathHelper.clamp_double(e.posZ - v.zCoord, -20, 20);
+					f = new EntitySmallFireball(e.worldObj, e, ax, ay, az);
+					f.worldObj.spawnEntityInWorld(f);
+					fatigue++;
+				} // spawns fireballs directed at the target, or straight if there is no target
+			} else {
+				for (Object obj : selectors) {
+					if (obj instanceof EntityLivingBase) {
+						fatigue++;
+						// Sets selected entities on fire
+						((EntityLivingBase) obj).setFire(10);
+					} else if (obj instanceof BlockPosHit && energy.getActualUser() instanceof Entity) {
+						World world = ((Entity) energy.getActualUser()).worldObj;
+						BlockPosHit pos = (BlockPosHit) obj;
+						// Sets block on fire
+						if (VersionUtils.isAirBlock(world, pos))
+							VersionUtils.setBlock(world, pos, Blocks.fire);
+					}
 				}
 			}
 			energy.performMagic(fatigue * 0.1f); // 10 fatigue  = 100% energy request
@@ -201,9 +234,8 @@ public class WordAction {
 					BlockPosHit pos = (BlockPosHit) obj;
 					World world = ((Entity) energy.getActualUser()).worldObj;
 					// Creates a ghost/werelight
-					if (VersionUtils.isAirBlock(world, pos)) {
+					if (VersionUtils.isAirBlock(world, pos))
 						VersionUtils.setBlock(world, pos, ModBlocks.ghostLight);
-					}
 				}
 			}
 			energy.performMagic(0.1f); // no matter what, only uses 10% of energy

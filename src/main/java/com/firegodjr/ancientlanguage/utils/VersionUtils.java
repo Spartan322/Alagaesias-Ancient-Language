@@ -48,6 +48,14 @@ public final class VersionUtils {
 		return ent.getPositionVector();
 	}
 
+	public static Vec3 getEntityLook(Entity ent) {
+		return ent.getLookVec();
+	}
+
+	public static Vec3 getEntityLook(Entity ent, float interp) {
+		return ent.getLook(interp);
+	}
+
 	public static float getBlockHardness(World w, BlockPosHit pos) {
 		BlockPos p = pos.getBlockPos();
 		return w.getBlockState(p).getBlock().getBlockHardness(w, p);

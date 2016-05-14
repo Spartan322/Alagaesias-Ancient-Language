@@ -39,14 +39,20 @@ public class WordSelector {
 	 * Selects surrounding entities, possibly user
 	 */
 	public static class UsSelector implements ISelector {
-		public static final int RADIUS = 4;
+		public static final int DEF_RADIUS = 4;
 
 		@Override
 		public List<?> getSelected(MagicData energy, Map<String, String> modData, World world, Vec3 position) {
-			Vec3 pos1 = position.addVector(-RADIUS, -RADIUS / 3, -RADIUS),
-					pos2 = position.addVector(RADIUS, RADIUS / 3, RADIUS);
-			energy.addMagicMultipler(0.2f);
-			return world.getEntitiesWithinAABB(EntityLivingBase.class, VersionUtils.getAABBFor(pos1, pos2));
+			int size = DEF_RADIUS;
+			try {
+				String sStr = modData.get("size");
+				if(sStr != null) size = Integer.valueOf(sStr);
+			} catch (NumberFormatException e) {
+			}
+			int level = energy.isMagicUser() ? energy.getUserLevel() : 1;
+			energy.addMagicMultipler(size/level * 0.05f);
+			return world.getEntitiesWithinAABB(EntityLivingBase.class, VersionUtils.getAABBFor(
+					position.addVector(-size, -size / 3, -size), position.addVector(size, size / 3, size)));
 		}
 	}
 
@@ -54,14 +60,20 @@ public class WordSelector {
 	 * Selects closest player
 	 */
 	public static class FriendSelector implements ISelector {
-		public static final int MAX_RADIUS = 4;
+		public static final int DEF_MAX_RADIUS = 4;
 
 		@Override
 		public List<?> getSelected(MagicData energy, Map<String, String> modData, World world, Vec3 position) {
-			return Collections.singletonList(getClosestUnrelatedPlayer(world, energy.getActualUser(), position));
+			int size = DEF_MAX_RADIUS;
+			try {
+				String sStr = modData.get("size");
+				if(sStr != null) size = Integer.valueOf(sStr);
+			} catch (NumberFormatException e) {
+			}
+			return Collections.singletonList(getClosestUnrelatedPlayer(world, energy.getActualUser(), position, size));
 		}
 
-		private EntityPlayer getClosestUnrelatedPlayer(World world, final Object possiblePlayer, final Vec3 position) {
+		private EntityPlayer getClosestUnrelatedPlayer(World world, final Object possiblePlayer, final Vec3 position, int radius) {
 			List<?> list = VersionUtils.findPlayersIn(world, new Predicate<Object>() {
 				double distanceSq = -1;
 
@@ -77,7 +89,7 @@ public class WordSelector {
 					double newDist = VersionUtils.getEntityPosition(player).squareDistanceTo(position);
 					if (distanceSq > newDist) {
 						distanceSq = newDist;
-						return!player.equals(possiblePlayer);
+						return !player.equals(possiblePlayer);
 					}
 					return false;
 				}
@@ -85,7 +97,7 @@ public class WordSelector {
 			if (list == null || list.isEmpty() || !(list.get(list.size() - 1) instanceof EntityPlayer))
 				return null;
 			EntityPlayer p = (EntityPlayer) list.get(list.size() - 1);
-			if (VersionUtils.getEntityPosition(p).squareDistanceTo(position) > MAX_RADIUS * MAX_RADIUS)
+			if (VersionUtils.getEntityPosition(p).squareDistanceTo(position) > radius * radius)
 				return null;
 			return p;
 		}
@@ -95,13 +107,18 @@ public class WordSelector {
 	 * Selects all surround EntityLiving based entities
 	 */
 	public static class ThoseSelector implements ISelector {
-		public static final int RADIUS = 4;
+		public static final int DEF_RADIUS = 4;
 
 		@Override
 		public List<?> getSelected(MagicData energy, Map<String, String> modData, World world, Vec3 position) {
-			Vec3 pos1 = position.addVector(-RADIUS, -RADIUS / 3, -RADIUS),
-					pos2 = position.addVector(RADIUS, RADIUS / 3, RADIUS);
-			return world.getEntitiesWithinAABB(EntityLiving.class, VersionUtils.getAABBFor(pos1, pos2));
+			int size = DEF_RADIUS;
+			try {
+				String sStr = modData.get("size");
+				if(sStr != null) size = Integer.valueOf(sStr);
+			} catch (NumberFormatException e) {
+			}
+			return world.getEntitiesWithinAABB(EntityLiving.class, VersionUtils.getAABBFor(
+					position.addVector(-size, -size / 3, -size), position.addVector(size, size / 3, size)));
 		}
 	}
 
@@ -122,18 +139,24 @@ public class WordSelector {
 	 * Selects looked at stone
 	 */
 	public static class StoneSelector implements ISelector {
-		public static final int MAX_RADIUS = 2;
+		public static final int DEF_MAX_RADIUS = 2;
 
 		@Override
 		public List<?> getSelected(MagicData energy, Map<String, String> modData, World world, Vec3 position) {
-			energy.addMagicMultipler(0.1f);
-			return getAllBlockHits(energy.getActualUser(), Blocks.stone);
+			int size = DEF_MAX_RADIUS;
+			try {
+				String sStr = modData.get("size");
+				if(sStr != null) size = Integer.valueOf(sStr);
+			} catch (NumberFormatException e) {
+			}
+			energy.addMagicMultipler(size * 0.05f);
+			return getAllBlockHits(energy.getActualUser(), Blocks.stone, size);
 		}
 
-		private List<BlockPosHit> getAllBlockHits(Object check, Block block) {
+		private List<BlockPosHit> getAllBlockHits(Object check, Block block, int size) {
 			if (!(check instanceof Entity))
 				return Collections.emptyList();
-			return getBlocks(block, MAX_RADIUS, new BlockPosHit(VersionUtils.rayTraceFor((Entity) check, 64, 1)));
+			return getBlocks(block, size, new BlockPosHit(VersionUtils.rayTraceFor((Entity) check, 64, 1)));
 		}
 	}
 
