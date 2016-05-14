@@ -10,7 +10,7 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
 import net.minecraft.util.EnumChatFormatting;
 import net.minecraft.util.Vec3;
 import net.minecraft.world.World;
@@ -182,15 +182,13 @@ public final class ScriptInstance {
 					word.onUse(this.getEnergy(), this.data.getImmutableData(word), selected);
 					heardWords.add(ScriptRegistry.getStringForInterface(word));
 				}
+				ChatComponentTranslation c = new ChatComponentTranslation("text:ancientlanguage.echoInMind", EnumChatFormatting.AQUA.toString() + Strings.join(heardWords, " "));
+				c.getChatStyle().setColor(EnumChatFormatting.GRAY).setItalic(true);
 				for (Object o : selected) {
 					if(o instanceof ICommandSender) {
-						((ICommandSender)o).addChatMessage(new ChatComponentText(
-						EnumChatFormatting.AQUA.toString() + Strings.join(heardWords, " ") +
-						EnumChatFormatting.GRAY + EnumChatFormatting.ITALIC + " echoes in your mind..."));
+						((ICommandSender)o).addChatMessage(c);
 					} else if (o instanceof Entity) {
-						((Entity)o).addChatMessage(new ChatComponentText(
-						EnumChatFormatting.AQUA.toString() + Strings.join(heardWords, " ") +
-						EnumChatFormatting.GRAY + EnumChatFormatting.ITALIC + " echoes in your mind..."));
+						((Entity)o).addChatMessage(c);
 					}
 				}
 				heardWords.clear();

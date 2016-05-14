@@ -81,10 +81,17 @@ public class Config {
 	public void syncConfig() {
 		forgeConfig.load();
 
-		debugOutput = forgeConfig.getBoolean("Debug Output", Configuration.CATEGORY_GENERAL, false, "Produces debug output");
-		parseDescoverString(forgeConfig.getString("Username Descover Pattern", Configuration.CATEGORY_GENERAL, "@\\\"\"",
-				"The first character is where to enter the name, the second character closes it, seperate with a \\ for mutiple"));
-
+		debugOutput = forgeConfig.getBoolean(getName("debugOutput"), Configuration.CATEGORY_GENERAL, false, getDes("debugOutput"));
+		parseDescoverString(forgeConfig.getString(getName("usernamePattern"), Configuration.CATEGORY_GENERAL, "@\\\"\"" , getDes("usernamePattern")));
+		
 		forgeConfig.save();
+	}
+
+	private static String getName(String name) {
+		return "config:"+Main.MODID+"."+name+".name";
+	}
+
+	private static String getDes(String name) {
+		return "config:"+Main.MODID+"."+name+".tooltip";
 	}
 }

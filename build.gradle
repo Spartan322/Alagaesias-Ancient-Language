@@ -56,16 +56,18 @@ sourceSets {
 processResources
 {
 	// this will ensure that this task is redone when the versions change.
-	inputs.property "version", project.version
-	inputs.property "mcversion", project.minecraft.version
+	inputs.property "version", config.modversion
+	inputs.property "mcversion", config.mcversion
+	inputs.property "forgeversion", config.forgeversion
 
 	from(sourceSets.main.resources.srcDirs) {
 		include 'mcmod.info'
+		include('**')
 		// replace version and mcversion
 		// Any instance of $version is replaced with contents of 
 		// config.modversion, any instance of mcversion is replaced with contents of config.mcversion
 		// Works for both source and assets
-		expand 'version':config.modversion, 'mcversion':config.mcversion
+		expand 'version':config.modversion, 'mcversion':config.mcversion, 'forgeversion':config.forgeversion
 	}
 }
 

@@ -1,0 +1,14 @@
+command:ancientlanguage.cast.usage=/cast <action> <target>
+command:ancientlanguage.exp.usuage=/exp [player] [<add:set> <experience>]
+
+text:ancientlanguage.nothingSaid=You said nothing.
+text:ancientlanguage.chantPrint=You chant: "%s"
+text:ancientlanguage.emptyMessageException=What you said seemed to have failed.
+text:ancientlanguage.echoInMind=%s echoes in your mind...
+text:ancientlanguage.level=Level: %s
+text:ancientlanguage.experience=Experience: %s
+
+config:ancientlanguage.debugOutput.name=Debug Output
+config:ancientlanguage.debugOutput.tooltip=Produces debug output
+config:ancientlanguage.usernamePattern.name=Username Descover Pattern
+config:ancientlanguage.usernamePattern.tooltip=The first character is where to enter the name, the second character closes it, seperate with a \ for mutiple

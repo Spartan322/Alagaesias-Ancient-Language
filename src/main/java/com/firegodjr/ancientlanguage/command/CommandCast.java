@@ -8,7 +8,8 @@ import net.minecraft.command.ICommandSender;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.util.BlockPos;
-import net.minecraft.util.ChatComponentText;
+import net.minecraft.util.ChatComponentTranslation;
+import net.minecraft.util.ChatStyle;
 import net.minecraft.util.EnumChatFormatting;
 
 import com.firegodjr.ancientlanguage.Main;
@@ -33,7 +34,7 @@ public class CommandCast extends CommandBase {
 
 	@Override
 	public String getCommandUsage(ICommandSender sender) {
-		return "/cast <action> <target>";
+		return "command:"+Main.MODID+".cast.usage";
 	}
 
 	@Override
@@ -43,9 +44,10 @@ public class CommandCast extends CommandBase {
 
 	@Override
 	public void execute(ICommandSender sender, String[] args) throws CommandException {
-		if (args.length == 0)
-			sender.addChatMessage(new ChatComponentText(EnumChatFormatting.GRAY.toString() + EnumChatFormatting.ITALIC + "You said nothing."));
-		else {
+		ChatStyle style = new ChatStyle().setColor(EnumChatFormatting.GRAY).setItalic(true);
+		if (args.length == 0) {
+			sender.addChatMessage(new ChatComponentTranslation("text:ancientlanguage.nothingSaid").setChatStyle(style));
+		} else {
 			Main.getLogger().info("Starting new ScriptInstance object");
 			ScriptInstance instance = new ScriptInstance(sender, args);
 			Main.getLogger().info("Entering script execution");
@@ -53,11 +55,10 @@ public class CommandCast extends CommandBase {
 			if (sender instanceof EntityPlayer)	Main.getLogger().info("Telling Player Chant");
 			String message = instance.getPrintableChant();
 			if (message.isEmpty())
-				throw new CommandException("What you said seemed to have failed.");
+				throw new CommandException("text:ancientlanguage.emptyMessageException");
 			sender.addChatMessage(
-						new ChatComponentText(EnumChatFormatting.GRAY.toString() + EnumChatFormatting.ITALIC + "You chant: \""
-								+ EnumChatFormatting.RESET + EnumChatFormatting.AQUA + message
-								+ EnumChatFormatting.GRAY + EnumChatFormatting.ITALIC + "\""));
+					new ChatComponentTranslation("text:ancientlanguage.chantPrint", EnumChatFormatting.RESET.toString() + EnumChatFormatting.AQUA + message)
+					.setChatStyle(style));
 			Main.getLogger().info("Cast Command Executed!");
 		}
 	}
@@ -82,5 +83,4 @@ public class CommandCast extends CommandBase {
 	public boolean isUsernameIndex(String[] args, int index) {
 		return false;
 	}
-
 }
