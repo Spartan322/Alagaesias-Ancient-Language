@@ -56,6 +56,10 @@ public final class VersionUtils {
 		return ent.getLook(interp);
 	}
 
+	public static BlockPos createBlockPos(Vec3 pos) {
+		return new BlockPos(pos.xCoord, pos.yCoord, pos.zCoord);
+	}
+
 	public static float getBlockHardness(World w, BlockPosHit pos) {
 		BlockPos p = pos.getBlockPos();
 		return w.getBlockState(p).getBlock().getBlockHardness(w, p);
@@ -119,7 +123,7 @@ public final class VersionUtils {
 				particle.toUpperCase()), pos.xCoord, pos.yCoord,
 				pos.zCoord, offset.xCoord, offset.yCoord, offset.zCoord);
 	}
-	
+
 	public static Entity getEntity(ICommandSender sender) {
 		return sender instanceof Entity ? (Entity) sender : sender.getCommandSenderEntity();
 	}

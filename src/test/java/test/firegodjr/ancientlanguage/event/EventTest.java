@@ -1,4 +1,4 @@
-package test.firegodjr.ancientlanguage;
+package test.firegodjr.ancientlanguage.event;
 
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;

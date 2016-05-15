@@ -1,21 +1,22 @@
-package test.firegodjr.ancientlanguage;
+package test.firegodjr.ancientlanguage.event;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 import com.firegodjr.ancientlanguage.api.script.events.ScriptEvent;
 
-public class ScriptEndEventTest {
+public class PostParseEventTest {
 
 	private static final boolean ENABLE = false;
 
 	public static void init() {
 		if (ENABLE)
-			MinecraftForge.EVENT_BUS.register(new ScriptEndEventTest());
+			MinecraftForge.EVENT_BUS.register(new PostParseEventTest());
 	}
 
 	@SubscribeEvent
-	public void onScriptEnd(ScriptEvent.End event) {
+	public void onScriptPreParse(ScriptEvent.PostParse event) {
 		System.out.println(event.getScriptInstance().toString());
+		event.setCanceled(true);
 	}
 }

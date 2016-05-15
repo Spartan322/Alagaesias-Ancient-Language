@@ -1,4 +1,4 @@
-package test.firegodjr.ancientlanguage;
+package test.firegodjr.ancientlanguage.event;
 
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

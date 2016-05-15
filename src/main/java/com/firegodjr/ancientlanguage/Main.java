@@ -13,6 +13,7 @@ import org.apache.logging.log4j.Logger;
 
 import com.firegodjr.ancientlanguage.command.CommandCast;
 import com.firegodjr.ancientlanguage.command.CommandExp;
+import com.firegodjr.ancientlanguage.command.CommandMagPush;
 
 @Mod(modid = Main.MODID, name = Main.MODNAME, /*version = Main.VERSION,*/ guiFactory = Main.GUIFACORY)
 public class Main {
@@ -58,6 +59,7 @@ public class Main {
 	public void serverLoad(FMLServerStartingEvent e) {
 		e.registerServerCommand(new CommandCast());
 		e.registerServerCommand(new CommandExp());
+		e.registerServerCommand(new CommandMagPush());
 	}
 	
 	/**
